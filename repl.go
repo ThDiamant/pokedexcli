@@ -17,10 +17,6 @@ func cleanInput(text string) []string {
 	return returnSlice
 }
 
-type Config struct {
-	commandRegistry map[string]cliCommand
-}
-
 type cliCommand struct {
 	name        string
 	description string
@@ -38,6 +34,18 @@ func commandHelp(config *Config) error {
 	fmt.Printf("Welcome to the Pokedex!\nUsage:\n\n")
 	for _, command := range config.commandRegistry {
 		fmt.Printf("%s: %s\n", command.name, command.description)
+	}
+
+	return nil
+}
+
+func commandMap(config *Config) error {
+	if err := getLocationAreaData(config); err != nil {
+		return err
+	}
+
+	for _, loc := range config.currentLocs {
+		fmt.Printf("%s\n", loc)
 	}
 
 	return nil
