@@ -17,37 +17,26 @@ func cleanInput(text string) []string {
 	return returnSlice
 }
 
+type Config struct {
+	commandRegistry map[string]cliCommand
+}
+
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(config *Config) error
 }
 
-func getCommands() map[string]cliCommand {
-	return map[string]cliCommand{
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    commandExit,
-		},
-		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    commandHelp,
-		},
-	}
-}
-
-func commandExit() error {
+func commandExit(config *Config) error {
 	fmt.Printf("Closing the Pokedex... Goodbye!\n")
 	os.Exit(0)
 
 	return nil
 }
 
-func commandHelp() error {
+func commandHelp(config *Config) error {
 	fmt.Printf("Welcome to the Pokedex!\nUsage:\n\n")
-	for _, command := range getCommands() {
+	for _, command := range config.commandRegistry {
 		fmt.Printf("%s: %s\n", command.name, command.description)
 	}
 
