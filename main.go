@@ -6,14 +6,28 @@ import (
 	"os"
 )
 
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+	}
+}
+
 func repl(config *Config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
-		input := scanner.Text()
-		cleanInput := cleanInput(input)
+		cleanInput := cleanInput(scanner.Text())
 
 		command, ok := config.commandRegistry[cleanInput[0]]
 		if !ok {
@@ -34,18 +48,7 @@ func repl(config *Config) {
 
 func main() {
 	config := Config{
-		commandRegistry: map[string]cliCommand{
-			"exit": {
-				name:        "exit",
-				description: "Exit the Pokedex",
-				callback:    commandExit,
-			},
-			"help": {
-				name:        "help",
-				description: "Displays a help message",
-				callback:    commandHelp,
-			},
-		},
+		commandRegistry: getCommands(),
 	}
 	repl(&config)
 }
