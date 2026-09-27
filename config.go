@@ -5,4 +5,5 @@ type Config struct {
 	next            string
 	prev            string
 	currentLocs     []string
+	goNext          bool
 }

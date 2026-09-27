@@ -7,9 +7,7 @@ import (
 	"net/http"
 )
 
-func getLocationAreaEndpointBaseUrl() string {
-	return "https://pokeapi.co/api/v2/location-area/"
-}
+const baseURL = "https://pokeapi.co/api/v2/location-area/"
 
 type locationAreaResponse struct {
 	Count    int    `json:"count"`
@@ -33,7 +31,13 @@ func getLocationAreaData(config *Config) error {
 }
 
 func getLocationAreaFromApi(config *Config) (locationAreaResponse, error) {
-	res, err := http.Get(config.next)
+	
+	url := config.next
+	if !config.goNext {
+		url = config.prev
+	}
+
+	res, err := http.Get(url)
 	if err != nil {
 		return locationAreaResponse{}, fmt.Errorf("Error while creating request: %w", err)
 	}

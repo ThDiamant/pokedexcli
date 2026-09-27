@@ -40,6 +40,21 @@ func commandHelp(config *Config) error {
 }
 
 func commandMap(config *Config) error {
+	config.goNext = true
+	return getDataFromApi(config)
+}
+
+func commandMapb(config *Config) error {
+	if config.prev == "" {
+		fmt.Println("you're on the first page")
+		return nil
+	}
+	config.goNext = false
+
+	return getDataFromApi(config)
+}
+
+func getDataFromApi(config *Config) error {
 	if err := getLocationAreaData(config); err != nil {
 		return err
 	}

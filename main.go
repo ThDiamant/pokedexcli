@@ -23,6 +23,11 @@ func getCommands() map[string]cliCommand {
 			description: "Displays the names of 20 location areas in the Pokemon world.",
 			callback:    commandMap,
 		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays the names of the previous 20 location areas in the Pokemon world",
+			callback:    commandMapb,
+		},
 	}
 }
 
@@ -54,7 +59,7 @@ func repl(config *Config) {
 func main() {
 	config := Config{
 		commandRegistry: getCommands(),
-		next: getLocationAreaEndpointBaseUrl(),
+		next:            baseURL,
 	}
 	repl(&config)
 }
