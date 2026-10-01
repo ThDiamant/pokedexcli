@@ -60,5 +60,3 @@ func TestReapLoop(t *testing.T) {
 	}
 
 }
-
-// second test fails - figure out why

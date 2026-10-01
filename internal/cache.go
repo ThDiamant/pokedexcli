@@ -17,13 +17,12 @@ type cacheEntry struct {
 }
 
 func NewCache(interval time.Duration) *Cache {
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(interval)
 	newCache := Cache{
 		contents: map[string]cacheEntry{},
 		mu:       sync.Mutex{},
 		ticker:   *ticker,
 	}
-	defer ticker.Stop()
 
 	go newCache.readLoop(interval)
 	return &newCache
