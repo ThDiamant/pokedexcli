@@ -55,12 +55,14 @@ func commandMapb(config *Config) error {
 }
 
 func getDataFromApi(config *Config) error {
-	if err := getLocationAreaData(config); err != nil {
+	areaData, err := getLocationAreaData(config)
+
+	if err != nil {
 		return err
 	}
 
-	for _, loc := range config.currentLocs {
-		fmt.Printf("%s\n", loc)
+	for _, loc := range areaData {
+		fmt.Printf("%s\n", string(loc))
 	}
 
 	return nil

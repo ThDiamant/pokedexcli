@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedexcli/internal"
+	"time"
 )
 
 func getCommands() map[string]cliCommand {
@@ -57,9 +59,12 @@ func repl(config *Config) {
 }
 
 func main() {
+	const interval = 5 * time.Second
+
 	config := Config{
 		commandRegistry: getCommands(),
 		next:            baseURL,
+		cache:           internal.NewCache(interval),
 	}
 	repl(&config)
 }
