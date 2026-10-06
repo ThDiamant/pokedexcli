@@ -30,6 +30,11 @@ func getCommands() map[string]cliCommand {
 			description: "Displays the names of the previous 20 location areas in the Pokemon world",
 			callback:    commandMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explores the given area",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -47,7 +52,12 @@ func repl(config *Config) {
 			continue
 		}
 
-		err := command.callback(config)
+		var param string
+		if len(cleanInput) > 1 {
+			param = cleanInput[1]
+		}
+
+		err := command.callback(config, param)
 		if err != nil {
 			fmt.Printf("Error while running command %s: %v", command.name, err)
 		}

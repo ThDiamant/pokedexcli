@@ -5,9 +5,10 @@ import (
 )
 
 type Config struct {
-	commandRegistry map[string]cliCommand
-	next            string
-	prev            string
-	goNext          bool
-	cache           *internal.Cache
+	commandRegistry    map[string]cliCommand
+	next               string
+	prev               string
+	goNext             bool
+	cache              *internal.Cache
+	commandCallbackarg string
 }

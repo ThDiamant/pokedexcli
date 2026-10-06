@@ -20,17 +20,17 @@ func cleanInput(text string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(config *Config) error
+	callback    func(config *Config, param string) error
 }
 
-func commandExit(config *Config) error {
+func commandExit(config *Config, param string) error {
 	fmt.Printf("Closing the Pokedex... Goodbye!\n")
 	os.Exit(0)
 
 	return nil
 }
 
-func commandHelp(config *Config) error {
+func commandHelp(config *Config, param string) error {
 	fmt.Printf("Welcome to the Pokedex!\nUsage:\n\n")
 	for _, command := range config.commandRegistry {
 		fmt.Printf("%s: %s\n", command.name, command.description)
@@ -39,12 +39,12 @@ func commandHelp(config *Config) error {
 	return nil
 }
 
-func commandMap(config *Config) error {
+func commandMap(config *Config, param string) error {
 	config.goNext = true
 	return getDataFromApi(config)
 }
 
-func commandMapb(config *Config) error {
+func commandMapb(config *Config, param string) error {
 	if config.prev == "" {
 		fmt.Println("you're on the first page")
 		return nil
@@ -63,6 +63,24 @@ func getDataFromApi(config *Config) error {
 
 	for _, loc := range areaData {
 		fmt.Printf("%s\n", string(loc))
+	}
+
+	return nil
+}
+
+func commandExplore(config *Config, areaName string) error {
+	if areaName == "" {
+		return fmt.Errorf("Please enter a location to explore.\n")
+	}
+
+	config.commandCallbackarg = areaName
+	pokemonNames, err := getSpecificLocationPokemonData(config)
+	if err != nil {
+		return err
+	}
+
+	for _, pokemon := range pokemonNames {
+		fmt.Printf("  - %s\n", pokemon)
 	}
 
 	return nil
