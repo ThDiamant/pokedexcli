@@ -35,6 +35,11 @@ func getCommands() map[string]cliCommand {
 			description: "Explores the given area",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Attempt to catch a pokemon",
+			callback:    commandCatch,
+		},
 	}
 }
 
@@ -73,8 +78,9 @@ func main() {
 
 	config := Config{
 		commandRegistry: getCommands(),
-		next:            baseURL,
+		next:            locationBaseURL,
 		cache:           internal.NewCache(interval),
+		caughtPokemon:   make(map[string]Pokemon),
 	}
 	repl(&config)
 }

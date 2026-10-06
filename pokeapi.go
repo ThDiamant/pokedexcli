@@ -7,7 +7,8 @@ import (
 	"net/http"
 )
 
-const baseURL = "https://pokeapi.co/api/v2/location-area/"
+const locationBaseURL = "https://pokeapi.co/api/v2/location-area/"
+const pokemonBaseURL = "https://pokeapi.co/api/v2/pokemon/"
 
 type locationAreaResponse struct {
 	Count    int    `json:"count"`
@@ -130,14 +131,14 @@ func extractLocationAreaData(config *Config, locAreaResp locationAreaResponse) (
 }
 
 func getSpecificLocationPokemonData(config *Config) ([]string, error) {
-	url := baseURL + config.commandCallbackarg
+	url := locationBaseURL + config.commandCallbackarg
 
 	pokLocData, err := getLocationPokemonFromApi(config, url)
 	if err != nil {
 		return []string{}, err
 	}
 
-	areaNames, err := extractPokemonAreaData(config, pokLocData)
+	areaNames, err := extractPokemonAreaData(pokLocData)
 
 	return areaNames, nil
 }
@@ -167,7 +168,7 @@ func getLocationPokemonFromApi(config *Config, url string) (specificAreaResponse
 	return specificLocResp, nil
 }
 
-func extractPokemonAreaData(config *Config, specificLocResp specificAreaResponse) ([]string, error) {
+func extractPokemonAreaData(specificLocResp specificAreaResponse) ([]string, error) {
 	pokemonNames := []string{}
 
 	for _, pokemon := range specificLocResp.PokemonEncounters {
@@ -175,4 +176,54 @@ func extractPokemonAreaData(config *Config, specificLocResp specificAreaResponse
 	}
 
 	return pokemonNames, nil
+}
+
+func getPokemonData(config *Config) (Pokemon, error) {
+	url := pokemonBaseURL + config.commandCallbackarg
+
+	pokeApiData, err := getPokemonDataFromApi(config, url)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	pokeData, err := extractPokemonData(pokeApiData)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	return pokeData, nil
+}
+
+func getPokemonDataFromApi(config *Config, url string) (pokemonResponse, error) {
+	data, ok := config.cache.Get(url)
+	if !ok {
+		res, err := http.Get(url)
+		if err != nil {
+			return pokemonResponse{}, fmt.Errorf("Error while creating request: %w\n", err)
+		}
+		defer res.Body.Close()
+
+		data, err = io.ReadAll(res.Body)
+		if err != nil {
+			return pokemonResponse{}, fmt.Errorf("Error reading response data %w\n", err)
+		}
+	}
+
+	config.cache.Add(url, data)
+
+	var pokemonResp pokemonResponse
+	if err := json.Unmarshal(data, &pokemonResp); err != nil {
+		return pokemonResponse{}, fmt.Errorf("Error unmarshalling response data: %w\n", err)
+	}
+
+	return pokemonResp, nil
+}
+
+func extractPokemonData(pokeResp pokemonResponse) (Pokemon, error) {
+	return Pokemon{
+		Name:           pokeResp.Name,
+		Height:         pokeResp.Height,
+		Weight:         pokeResp.Weight,
+		BaseExperience: pokeResp.BaseExperience,
+	}, nil
 }

@@ -11,4 +11,5 @@ type Config struct {
 	goNext             bool
 	cache              *internal.Cache
 	commandCallbackarg string
+	caughtPokemon      map[string]Pokemon
 }
