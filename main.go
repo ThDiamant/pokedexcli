@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// TODO: General refactor
+// TODO: Modify catch probabilities so catching a pokemon sometimes fails
+
 func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"exit": {
@@ -39,6 +42,11 @@ func getCommands() map[string]cliCommand {
 			name:        "catch",
 			description: "Attempt to catch a pokemon",
 			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a pokemon",
+			callback:    commandInspect,
 		},
 	}
 }

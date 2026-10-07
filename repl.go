@@ -109,3 +109,14 @@ func commandCatch(config *Config, pokemonName string) error {
 
 	return nil
 }
+
+func commandInspect(config *Config, pokemonName string) error {
+	pokeData, ok := config.caughtPokemon[pokemonName]
+	if !ok {
+		fmt.Println("you have not caught that pokemon")
+		return nil
+	}
+
+	pokeData.printPokeData()
+	return nil
+}

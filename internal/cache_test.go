@@ -39,7 +39,6 @@ func TestAddGet(t *testing.T) {
 	}
 }
 
-// TODO: thid fails when running 'go test ./...' from project root
 func TestReapLoop(t *testing.T) {
 	const baseTime = 5 * time.Millisecond
 	const waitTime = baseTime + 5*time.Millisecond

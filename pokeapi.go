@@ -220,10 +220,30 @@ func getPokemonDataFromApi(config *Config, url string) (pokemonResponse, error) 
 }
 
 func extractPokemonData(pokeResp pokemonResponse) (Pokemon, error) {
+
+	stats := make(map[string]int)
+	for _, stat := range pokeResp.Stats {
+		stats[stat.Stat.Name] = stat.BaseStat
+	}
+
+	types := []string{}
+	for _, pokeType := range pokeResp.Types {
+		types = append(types, pokeType.Type.Name)
+	}
+
 	return Pokemon{
 		Name:           pokeResp.Name,
 		Height:         pokeResp.Height,
 		Weight:         pokeResp.Weight,
 		BaseExperience: pokeResp.BaseExperience,
+		Stats: PokemonStats{
+			Hp:             stats["hp"],
+			Attack:         stats["attack"],
+			Defence:        stats["defence"],
+			SpecialAttack:  stats["special-attack"],
+			SpecialDefence: stats["special-defence"],
+			Speed:          stats["speed"],
+		},
+		Types: types,
 	}, nil
 }
