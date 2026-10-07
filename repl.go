@@ -120,3 +120,12 @@ func commandInspect(config *Config, pokemonName string) error {
 	pokeData.printPokeData()
 	return nil
 }
+
+func commandPokedex(config *Config, param string) error {
+	fmt.Println("Your Pokedex:")
+	for name, _ := range config.caughtPokemon {
+		fmt.Printf(" - %s\n", name)
+	}
+
+	return nil
+}
